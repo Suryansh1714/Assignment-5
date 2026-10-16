@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
+const API_BASE = import.meta.env.VITE_API_URL !== undefined
+  ? import.meta.env.VITE_API_URL
+  : (import.meta.env.DEV ? 'http://localhost:5000' : '')
+
 function ShowsList() {
   const [characters, setCharacters] = useState([])
   const [totalPages, setTotalPages] = useState(1)
@@ -20,7 +24,7 @@ function ShowsList() {
       setError(null)
 
       try {
-        let backendUrl = `http://localhost:5000/api/characters?page=${currentPage}`
+        let backendUrl = `${API_BASE}/api/characters?page=${currentPage}`
         if (search) backendUrl += `&name=${encodeURIComponent(search)}`
         if (status) backendUrl += `&status=${encodeURIComponent(status)}`
 
@@ -28,7 +32,7 @@ function ShowsList() {
         try {
           res = await fetch(backendUrl)
         } catch {
-          // If local backend is not running, fallback directly to Rick and Morty API
+          // Fallback directly to Rick and Morty API if backend is not reachable
           let fallbackUrl = `https://rickandmortyapi.com/api/character?page=${currentPage}`
           if (search) fallbackUrl += `&name=${encodeURIComponent(search)}`
           if (status) fallbackUrl += `&status=${encodeURIComponent(status)}`

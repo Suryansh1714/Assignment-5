@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
+const API_BASE = import.meta.env.VITE_API_URL !== undefined
+  ? import.meta.env.VITE_API_URL
+  : (import.meta.env.DEV ? 'http://localhost:5000' : '')
+
 function ShowDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -15,9 +19,9 @@ function ShowDetails() {
       try {
         let res = null
         try {
-          res = await fetch(`http://localhost:5000/api/characters/${id}`)
+          res = await fetch(`${API_BASE}/api/characters/${id}`)
         } catch {
-          // If local backend is not running, fallback directly to Rick and Morty API
+          // Fallback directly to Rick and Morty API if backend is not reachable
           res = await fetch(`https://rickandmortyapi.com/api/character/${id}`)
         }
 
