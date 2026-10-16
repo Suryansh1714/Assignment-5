@@ -26,7 +26,7 @@ app.get('/api/characters', async (req, res) => {
 
     const data = await response.json()
     res.json(data)
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: 'Failed to fetch characters' })
   }
 })
@@ -45,7 +45,7 @@ app.get('/api/characters/:id', async (req, res) => {
 
     const data = await response.json()
     res.json(data)
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: 'Failed to fetch character' })
   }
 })

@@ -13,7 +13,14 @@ function ShowDetails() {
       setLoading(true)
       setError(null)
       try {
-        const res = await fetch(`http://localhost:5000/api/characters/${id}`)
+        let res = null
+        try {
+          res = await fetch(`http://localhost:5000/api/characters/${id}`)
+        } catch {
+          // If local backend is not running, fallback directly to Rick and Morty API
+          res = await fetch(`https://rickandmortyapi.com/api/character/${id}`)
+        }
+
         if (!res.ok) throw new Error('Character not found')
         const data = await res.json()
         setCharacter(data)

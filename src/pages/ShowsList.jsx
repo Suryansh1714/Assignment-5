@@ -20,11 +20,21 @@ function ShowsList() {
       setError(null)
 
       try {
-        let url = `http://localhost:5000/api/characters?page=${currentPage}`
-        if (search) url += `&name=${encodeURIComponent(search)}`
-        if (status) url += `&status=${encodeURIComponent(status)}`
+        let backendUrl = `http://localhost:5000/api/characters?page=${currentPage}`
+        if (search) backendUrl += `&name=${encodeURIComponent(search)}`
+        if (status) backendUrl += `&status=${encodeURIComponent(status)}`
 
-        const res = await fetch(url)
+        let res = null
+        try {
+          res = await fetch(backendUrl)
+        } catch {
+          // If local backend is not running, fallback directly to Rick and Morty API
+          let fallbackUrl = `https://rickandmortyapi.com/api/character?page=${currentPage}`
+          if (search) fallbackUrl += `&name=${encodeURIComponent(search)}`
+          if (status) fallbackUrl += `&status=${encodeURIComponent(status)}`
+          res = await fetch(fallbackUrl)
+        }
+
         if (!res.ok) {
           if (res.status === 404) {
             setCharacters([])
